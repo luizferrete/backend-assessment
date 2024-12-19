@@ -1,4 +1,4 @@
-# Employee Management assesstment
+# Employee Management assessment
 
 - Created by Luiz Augusto Ferrete (l.a.ferrete@gmail.com)
 
