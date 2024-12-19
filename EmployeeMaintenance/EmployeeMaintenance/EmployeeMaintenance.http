@@ -1,0 +1,54 @@
+@EmployeeMaintenance_HostAddress = https://localhost:44373/api/v1.0
+
+GET {{EmployeeMaintenance_HostAddress}}/employee/5
+Accept: application/json
+
+###
+
+GET {{EmployeeMaintenance_HostAddress}}/employee
+Accept: application/json
+
+###
+
+POST {{EmployeeMaintenance_HostAddress}}/employee
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Teste123",
+  "lastName": "Da silva",
+  "hireDate": "2024-12-20",
+  "departmentId": 1,
+  "phone": "54 9999-9999",
+  "address": "Rua XYZ"
+}
+
+###
+
+PUT {{EmployeeMaintenance_HostAddress}}/employee/5
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Tesssste",
+  "lastName": "Da silva",
+  "hireDate": "2024-12-10",
+  "departmentId": 2,
+  "phone": "54 9999-9999",
+  "address": "Rua XYZ"
+}
+
+###
+
+DELETE {{EmployeeMaintenance_HostAddress}}/employee/5
+Accept: application/json
+
+###
+
+GET {{EmployeeMaintenance_HostAddress}}/department
+Accept: application/json
+
+###
+
+PATCH {{EmployeeMaintenance_HostAddress}}/employee/1/department/3
+Accept: application/json
