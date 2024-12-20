@@ -1,4 +1,4 @@
-# Employee Management assesstment
+# Employee Management assessment
 
 - Created by Luiz Augusto Ferrete (l.a.ferrete@gmail.com)
 
@@ -16,7 +16,13 @@ cd EmployeeMaintenance ## To go to the API project folder
 dotnet run
 ```
 
+## Project details
 
+   - Built with [.NET 8](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0).
+   - **ORM**: [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
+   - [AutoMapper](https://automapper.org/): Used to map models.
+   - [Dependency Injection](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection)
+   - Testing framework: [xUnit](https://xunit.net/)
 
 ## Project Architecture Overview
 
@@ -42,4 +48,10 @@ This solution implements a **Clean Architecture** approach with a focus on separ
 
 #### 5. **EmployeeMaintenance.Tests**
    - Contains unit tests to validate the application’s functionality.
+
+## Database structure
+
+SQLite is the database of choice. It was chosen for its simplicity and ease of setup. Below is the simple structure used in this project
+
+![Employee Maintenance Screenshot](db-structure.png "Employee Maintenance App")
 
