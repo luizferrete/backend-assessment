@@ -18,11 +18,12 @@ dotnet run
 
 ## Project details
 
-   - Built with [.NET 8](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0).
-   - **ORM**: [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
-   - [AutoMapper](https://automapper.org/): Used to map models.
+   - [.NET 8](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0).
+   - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
+   - [AutoMapper](https://automapper.org/)
    - [Dependency Injection](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection)
-   - Testing framework: [xUnit](https://xunit.net/)
+   - [xUnit](https://xunit.net/)
+   - [MemoryCache](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.caching.memory.memorycache?view=net-9.0-pp)
 
 ## Project Architecture Overview
 
