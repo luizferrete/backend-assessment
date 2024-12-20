@@ -15,20 +15,23 @@ using System.Threading.Tasks;
 
 namespace EmployeeMaintenance.Tests.Service
 {
-    public class DepartmentServiceTests : IClassFixture<DepartmentFixture>
+    public class DepartmentServiceTests : IClassFixture<DepartmentFixture>, IClassFixture<CacheFixture>
     {
         private readonly Mock<IDepartmentRepository> _departmentRepositoryMock;
         private readonly IDepartmentService _departmentService;
         private readonly IMapper _mapper;
         private readonly Faker<Department> _departmentFaker;
 
-        public DepartmentServiceTests(DepartmentFixture fixture)
+        public DepartmentServiceTests(DepartmentFixture fixture, CacheFixture cacheFixture)
         {
             _departmentRepositoryMock = fixture.DepartmentRepositoryMock;
             _departmentRepositoryMock.Invocations.Clear();
             _mapper = fixture.Mapper;
 
-            _departmentService = new DepartmentService(_departmentRepositoryMock.Object, _mapper);
+            _departmentService = new DepartmentService(
+                _departmentRepositoryMock.Object,
+                _mapper,
+                cacheFixture.CacheHelperMock.Object);
 
             _departmentFaker = new Faker<Department>()
                 .RuleFor(e => e.Id, f => f.Random.Int(1, 1000))

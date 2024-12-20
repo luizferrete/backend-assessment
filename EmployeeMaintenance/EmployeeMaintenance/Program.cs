@@ -71,6 +71,7 @@ builder.Services.AddApiVersioning(options =>
     options.ApiVersionReader = new Microsoft.AspNetCore.Mvc.Versioning.UrlSegmentApiVersionReader();
 });
 
+builder.Services.AddMemoryCache();
 builder.Services.AddDbContext<EntityContext>();
 builder.Services.AddAutoMapper(typeof(ConfigMapper));
 

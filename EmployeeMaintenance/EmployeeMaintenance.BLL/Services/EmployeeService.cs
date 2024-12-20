@@ -3,6 +3,7 @@ using EmployeeMaintenance.DL.Entities;
 using EmployeeMaintenance.DL.Services.BLL;
 using EmployeeMaintenance.DL.Services.DAL.Repositories;
 using EmployeeMaintenance.DL.ValueObjects;
+using Microsoft.Extensions.Caching.Memory;
 using System.Text.RegularExpressions;
 
 namespace EmployeeMaintenance.BLL.Services
@@ -13,12 +14,14 @@ namespace EmployeeMaintenance.BLL.Services
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
         private readonly IDepartmentService _departmentService;
+        private readonly ICacheHelper _cacheHelper;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, IDepartmentService departmentService)
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, IDepartmentService departmentService, ICacheHelper cacheHelper)
         {
             _employeeRepository = employeeRepository;
             _mapper = mapper;
             _departmentService = departmentService;
+            _cacheHelper = cacheHelper;
         }
 
         public async Task Create(EmployeeRequest employeeRequest)
@@ -28,6 +31,8 @@ namespace EmployeeMaintenance.BLL.Services
             Employee employee = _mapper.Map<Employee>(employeeRequest);
 
             await _employeeRepository.InsertAsync(employee);
+
+            ClearCache();
         }
 
         public async Task Delete(long id)
@@ -40,22 +45,41 @@ namespace EmployeeMaintenance.BLL.Services
             }
 
             await _employeeRepository.DeleteAsync(employee);
+            ClearCache(
+                id: (int)id,
+                clearDistinct: true,
+                clearExists: true);
         }
 
         public async Task<bool> Exists(long id)
         {
-            return await _employeeRepository.ExistsAsync(id);
+            return await _cacheHelper.GetOrCreateAsync("ExistsEmployee"+id, async item =>
+            {
+                return await _employeeRepository.ExistsAsync(id);
+            });
         }
 
         public IEnumerable<EmployeeResponse> GetAll()
         {
-            return _employeeRepository.GetAll()
-                .Select(employee => _mapper.Map<EmployeeResponse>(employee));
+            return _cacheHelper.GetOrCreate("GetAllEmployees", item =>
+            {
+                return _employeeRepository.GetAll().ToList()
+                    .Select(employee => _mapper.Map<EmployeeResponse>(employee));
+            }, new CacheOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
+            });
         }
 
         public async Task<Employee> GetById(long id)
         {
-            return await _employeeRepository.FindByIdAsync(id);
+            return await _cacheHelper.GetOrCreateAsync("GetEmployee" + id, async item =>
+            {
+                item.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15);
+                item.SlidingExpiration = TimeSpan.FromMinutes(10);
+
+                return await _employeeRepository.FindByIdAsync(id) ?? throw new KeyNotFoundException("Employee not found.");
+            });
         }
         
         public async Task Update(int id, EmployeeRequest employeeRequest)
@@ -68,6 +92,11 @@ namespace EmployeeMaintenance.BLL.Services
             employee.Id = id;
 
             await _employeeRepository.UpdateAsync(employee);
+
+            ClearCache(
+                clearDistinct: true,
+                id: id);
+
         }
 
         private async Task ValidateEmployeeExists(long id)
@@ -86,7 +115,10 @@ namespace EmployeeMaintenance.BLL.Services
             await ValidateDepartment(departmentId);
 
             await _employeeRepository.UpdateEmployeeDepartment(employeeId, departmentId);
-
+            
+            ClearCache(
+                clearDistinct: true,
+                id: (int)employeeId);
         }
 
         private async Task ValidateEmployee(EmployeeRequest employee)
@@ -131,6 +163,17 @@ namespace EmployeeMaintenance.BLL.Services
 
             if (!hasDepartment)
                 throw new KeyNotFoundException("Department not found.");
+        }
+
+        private void ClearCache(bool clearDistinct = false, int? id = null, bool clearExists = false)
+        {
+            if (clearDistinct && id.HasValue)
+                _cacheHelper.Remove("GetEmployee" + id);
+
+            if (clearExists && id.HasValue)
+                _cacheHelper.Remove("ExistsEmployee" + id);
+
+            _cacheHelper.Remove("GetAllEmployees");
         }
     }
 }

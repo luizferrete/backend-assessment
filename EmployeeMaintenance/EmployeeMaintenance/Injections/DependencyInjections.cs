@@ -6,6 +6,7 @@ using EmployeeMaintenance.DL.Services.BLL;
 using EmployeeMaintenance.DL.Services.DAL.Repositories;
 using EmployeeMaintenance.DL.Services.DAL;
 using Microsoft.EntityFrameworkCore;
+using EmployeeMaintenance.BLL.Helpers;
 
 namespace EmployeeMaintenance.API.Injections
 {
@@ -19,6 +20,8 @@ namespace EmployeeMaintenance.API.Injections
                 options.UseLazyLoadingProxies();
                 options.EnableSensitiveDataLogging();
             });
+
+            servicesContainer.AddSingleton<ICacheHelper, CacheHelper>();
 
             servicesContainer.AddScoped(typeof(IRepository<>), typeof(EFRepository<>));
 

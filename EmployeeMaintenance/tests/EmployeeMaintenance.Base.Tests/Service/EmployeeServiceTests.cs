@@ -7,10 +7,11 @@ using EmployeeMaintenance.DL.Services.BLL;
 using EmployeeMaintenance.DL.Services.DAL.Repositories;
 using EmployeeMaintenance.DL.ValueObjects;
 using Moq;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EmployeeMaintenance.Tests.Service
 {
-    public class EmployeeServiceTests : IClassFixture<EmployeeFixture>
+    public class EmployeeServiceTests : IClassFixture<EmployeeFixture>, IClassFixture<CacheFixture>
     {
         private readonly Mock<IEmployeeRepository> _employeeRepositoryMock;
         private readonly Mock<IDepartmentService> _departmentServiceMock;
@@ -18,8 +19,10 @@ namespace EmployeeMaintenance.Tests.Service
         private readonly EmployeeService _employeeService;
         private readonly Faker<Employee> _employeeFaker;
         private readonly IMapper _mapper;
+        private readonly Mock<ICacheHelper> _cacheHelperMock;
 
-        public EmployeeServiceTests(EmployeeFixture fixture)
+
+        public EmployeeServiceTests(EmployeeFixture fixture, CacheFixture cacheFixture)
         {
             _employeeRepositoryMock = fixture.EmployeeRepositoryMock;
             _departmentServiceMock = fixture.DepartmentServiceMock;
@@ -49,7 +52,8 @@ namespace EmployeeMaintenance.Tests.Service
             _employeeService = new EmployeeService(
                 _employeeRepositoryMock.Object,
                 _mapper,
-                _departmentServiceMock.Object
+                _departmentServiceMock.Object,
+                cacheFixture.CacheHelperMock.Object
             );
         }
 
@@ -247,6 +251,7 @@ namespace EmployeeMaintenance.Tests.Service
             // Arrange
             long id = 10;
             SetupEmployeeExists(id);
+
 
             // Act
             var result = await _employeeService.Exists(id);

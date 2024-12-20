@@ -1,18 +1,19 @@
 @EmployeeMaintenance_HostAddress = https://localhost:44373/api/v1.0
 
-GET {{EmployeeMaintenance_HostAddress}}/employee/5
+GET {{EmployeeMaintenance_HostAddress}}/employee/1
 Accept: application/json
-
+EM-API-KEY: a3f5c9d8e2b4f1c6a7d9e0b3c4d5f6a7
 ###
 
 GET {{EmployeeMaintenance_HostAddress}}/employee
 Accept: application/json
-
+EM-API-KEY: a3f5c9d8e2b4f1c6a7d9e0b3c4d5f6a7
 ###
 
 POST {{EmployeeMaintenance_HostAddress}}/employee
 Content-Type: application/json
 Accept: application/json
+EM-API-KEY: a3f5c9d8e2b4f1c6a7d9e0b3c4d5f6a7
 
 {
   "name": "Teste123",
@@ -25,12 +26,13 @@ Accept: application/json
 
 ###
 
-PUT {{EmployeeMaintenance_HostAddress}}/employee/5
+PUT {{EmployeeMaintenance_HostAddress}}/employee/2
 Content-Type: application/json
 Accept: application/json
+EM-API-KEY: a3f5c9d8e2b4f1c6a7d9e0b3c4d5f6a7
 
 {
-  "name": "Tesssste",
+  "name": "Tessss5te",
   "lastName": "Da silva",
   "hireDate": "2024-12-10",
   "departmentId": 2,
@@ -40,8 +42,9 @@ Accept: application/json
 
 ###
 
-DELETE {{EmployeeMaintenance_HostAddress}}/employee/5
+DELETE {{EmployeeMaintenance_HostAddress}}/employee/3
 Accept: application/json
+EM-API-KEY: a3f5c9d8e2b4f1c6a7d9e0b3c4d5f6a7
 
 ###
 
